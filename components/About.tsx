@@ -60,7 +60,7 @@ export default function About() {
             >
               Street Coffee
               <br />
-              <span className="text-[#FF5A1F]">Reinvented</span>
+              <span className="text-[#FF5A1F]">Thiz Coffee</span>
             </h2>
 
             <p className="text-gray-600 text-lg leading-relaxed mb-6">
