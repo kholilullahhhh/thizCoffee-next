@@ -6,9 +6,9 @@ import { Star, ShoppingCart } from 'lucide-react';
 const products = [
   {
     id: 1,
-    name: 'Iced Coffee Milk',
-    desc: 'Classic iced coffee with creamy fresh milk. Smooth and satisfying.',
-    price: 18000,
+    name: 'Kopi Gula Aren',
+    desc: 'Classic iced coffee palm sugar with creamy fresh milk.',
+    price: 15000,
     rating: 4.9,
     reviews: 834,
     badge: 'Best Seller',
@@ -20,7 +20,7 @@ const products = [
     id: 2,
     name: 'Caramel Latte',
     desc: 'Rich espresso with silky caramel and steamed milk in a bottle.',
-    price: 22000,
+    price: 15000,
     rating: 4.8,
     reviews: 621,
     badge: 'Fan Fave',

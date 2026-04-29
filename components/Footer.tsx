@@ -1,9 +1,9 @@
 import { Coffee, MapPin, Phone, Mail, Instagram, Twitter, Youtube } from 'lucide-react';
 
-const menuLinks = ['Iced Coffee Milk', 'Caramel Latte', 'Vanilla Coffee', 'Matcha Coffee'];
+const menuLinks = ['Kopi Gula Aren', 'Caramel Latte', 'Vanilla Coffee', 'Matcha Coffee'];
 const companyLinks = ['About Us', 'How It Works', 'Careers', 'Press'];
 const socialLinks = [
-  { icon: <Instagram className="w-5 h-5" />, label: 'Instagram', href: '#' },
+  { icon: <Instagram className="w-5 h-5" />, label: 'Instagram', href: 'https://www.instagram.com/thiz.coffee' },
   { icon: <Twitter className="w-5 h-5" />, label: 'Twitter', href: '#' },
   { icon: <Youtube className="w-5 h-5" />, label: 'YouTube', href: '#' },
 ];
@@ -24,7 +24,7 @@ export default function Footer() {
                 className="text-white text-xl font-black tracking-widest uppercase"
                 style={{ fontFamily: "'Bebas Neue', cursive" }}
               >
-                MotoBrewa
+                ThizCoffee
               </span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
@@ -86,19 +86,19 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-[#FF5A1F] flex-shrink-0 mt-0.5" />
                 <span className="text-gray-400 text-sm">
-                  Jl. Sudirman No. 88, Jakarta Selatan, 12190
+                  Keliling Makassar, South Sulawesi
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-[#FF5A1F] flex-shrink-0" />
                 <a href="tel:+628001234567" className="text-gray-400 hover:text-white text-sm transition-colors">
-                  +62 800 1234 567
+                  +62 888 4257 606
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-[#FF5A1F] flex-shrink-0" />
                 <a href="mailto:hello@motobrewa.id" className="text-gray-400 hover:text-white text-sm transition-colors">
-                  hello@motobrewa.id
+                  thiz.coffee@gmail.com
                 </a>
               </li>
             </ul>
@@ -120,7 +120,7 @@ export default function Footer() {
       <div className="border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-gray-600 text-xs">
-            &copy; {new Date().getFullYear()} MotoBrewa. All rights reserved.
+            &copy; {new Date().getFullYear()} Thiz.Coffee. All rights reserved.
           </p>
           <div className="flex gap-5">
             {['Privacy Policy', 'Terms of Service'].map((l) => (

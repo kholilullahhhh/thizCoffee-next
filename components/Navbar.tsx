@@ -38,7 +38,7 @@ export default function Navbar() {
             className="text-white text-xl font-black tracking-widest uppercase"
             style={{ fontFamily: "'Bebas Neue', cursive" }}
           >
-            MotoBrewa
+            THIZ COFFEE
           </span>
         </a>
 

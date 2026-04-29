@@ -49,7 +49,7 @@ export default function Features() {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#FF5A1F]/10 border border-[#FF5A1F]/30 rounded-full mb-6">
             <span className="w-2 h-2 rounded-full bg-[#FF5A1F] animate-pulse" />
             <span className="text-xs font-semibold uppercase tracking-widest text-[#FF5A1F]">
-              Why MotoBrewa
+              Why ThizCofee
             </span>
           </div>
           <h2
@@ -59,7 +59,7 @@ export default function Features() {
               fontSize: 'clamp(40px, 6vw, 72px)',
             }}
           >
-            Built for the <span className="text-[#FF5A1F]">Bold</span>
+            Built for the <span className="text-[#FF5A1F]">Thiz</span>
           </h2>
         </div>
 

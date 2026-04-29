@@ -68,7 +68,7 @@ export default function CTASection() {
           >
             Ready for Coffee
             <br />
-            Without the Hassle?
+            Otw mi Thiz Coffee itu
           </h2>
 
           <p className="text-white/80 text-xl max-w-xl mx-auto mb-10 leading-relaxed">

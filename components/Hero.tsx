@@ -65,7 +65,7 @@ export default function Hero() {
           >
             <Zap className="w-3.5 h-3.5 text-[#FF5A1F]" fill="#FF5A1F" />
             <span className="text-xs font-semibold uppercase tracking-widest text-white/90">
-              Motorcycle Delivery
+              Motorcycle concept
             </span>
           </div>
 
@@ -80,7 +80,7 @@ export default function Hero() {
               className="block text-white"
               style={{ fontSize: 'clamp(52px, 9vw, 108px)' }}
             >
-              Fast Coffee,
+              ThiZ Coffee,
             </span>
             <span
               className="block text-[#FF5A1F]"
@@ -98,8 +98,9 @@ export default function Hero() {
               loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
           >
-            Fresh bottled coffee delivered by motorcycle straight to your
-            location. Made for the bold. Made for the streets.
+            Di ThizCoffee, kami menyajikan kopi Aren berkualitas tinggi,
+             dengan mix Arabika Toraja dan Robusta Kalosi, 
+            untuk dinikmati Ana anaka di Makassar.
           </p>
 
           {/* CTA Buttons */}
@@ -234,7 +235,7 @@ export default function Hero() {
                   ☕
                 </text>
                 <text x="192" y="212" textAnchor="middle" fontSize="8" fill="white" fontWeight="bold" fontFamily="sans-serif" letterSpacing="1">
-                  MOTOBREWA
+                  THIZ COFFEE
                 </text>
                 {/* Box handle/strap */}
                 <rect x="175" y="144" width="34" height="8" rx="4" fill="#CC3D00" />
@@ -255,9 +256,9 @@ export default function Hero() {
                 <rect x="18" y="14" width="20" height="10" rx="4" fill="#CC3D00" />
                 {/* Label */}
                 <rect x="13" y="46" width="30" height="40" rx="4" fill="#FF5A1F" />
-                <text x="28" y="65" textAnchor="middle" fontSize="7" fill="white" fontWeight="bold" fontFamily="sans-serif">MOTO</text>
-                <text x="28" y="76" textAnchor="middle" fontSize="7" fill="white" fontWeight="bold" fontFamily="sans-serif">BREWA</text>
-                <text x="28" y="87" textAnchor="middle" fontSize="6" fill="rgba(255,255,255,0.7)" fontFamily="sans-serif">COFFEE</text>
+                <text x="28" y="65" textAnchor="middle" fontSize="7" fill="white" fontWeight="bold" fontFamily="sans-serif">THIZ</text>
+                <text x="28" y="76" textAnchor="middle" fontSize="7" fill="white" fontWeight="bold" fontFamily="sans-serif">COFFEE</text>
+                {/* <text x="28" y="87" textAnchor="middle" fontSize="6" fill="rgba(255,255,255,0.7)" fontFamily="sans-serif">COFFEE</text> */}
                 {/* Shine */}
                 <rect x="38" y="48" width="4" height="30" rx="2" fill="rgba(255,255,255,0.15)" />
               </g>

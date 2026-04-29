@@ -7,22 +7,22 @@ const pillars = [
   {
     icon: <Bike className="w-6 h-6" />,
     title: 'Mobile by Design',
-    desc: 'Our coffee shop is on wheels. A fleet of motorcycles brings your order directly to wherever you are in the city.',
+    desc: 'Kedai kopi kami beroda. sepeda motor membawa pesanan Anda langsung ke mana pun Anda berada di kota Makassar.',
   },
   {
     icon: <Package className="w-6 h-6" />,
     title: 'Bottled for Life',
-    desc: 'Premium coffee sealed in sleek bottles — no spills, no fuss. Sip it at your desk, at the gym, or on the move.',
+    desc: 'Kopi premium disegel dalam botol ramping — tanpa tumpahan, tersegel aman.',
   },
   {
     icon: <Users className="w-6 h-6" />,
     title: 'Built for Gen Z',
-    desc: 'We get it — you\'re busy, you\'re bold, and you want your coffee without the wait. That\'s exactly what we built.',
+    desc: 'Apalagi buat anak muda Makassar. Kamu butuh kopi tanpa ribet dan tanpa nunggu lama, dan itulah yang kami hadirkan. Cocok buat siapa saja, di mana saja.',
   },
   {
     icon: <Leaf className="w-6 h-6" />,
     title: 'Fresh Every Time',
-    desc: 'Brewed fresh on order. No reheating, no shortcuts. Real coffee for real people who know the difference.',
+    desc: 'Diseduh segar sesuai pesanan. Tidak ada pemanasan ulang, tidak ada jalan pintas. Kopi asli untuk orang sungguhan yang tahu bedanya.',
   },
 ];
 
@@ -64,21 +64,21 @@ export default function About() {
             </h2>
 
             <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              MotoBrewa isn't just coffee — it's a movement. We took the vibrant
-              energy of street culture and blended it with premium coffee craft to
-              create something that fits your pace.
+              Thiz Coffee bukan sekadar kopi — ini adalah sebuah gerakan. 
+              Kami menggabungkan energi dinamis budaya jalanan dengan racikan kopi premium untuk 
+              menciptakan sesuatu yang sesuai dengan ritmemu.
             </p>
             <p className="text-gray-500 leading-relaxed mb-8">
-              No queues. No café hunting. Just a quick tap on your phone and your
-              coffee is already speeding toward you on the back of a motorcycle.
-              We exist for the generation that moves fast and lives bold.
+              Tanpa antre. Tanpa perlu cari kafe. Cukup satu klik di ponselmu, 
+              dan kopimu langsung meluncur ke arahmu di atas motor.
+               Kami hadir untuk generasi yang bergerak cepat dan hidup dengan berani.
             </p>
 
             <a
               href="#menu"
               className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#0A0A0A] text-white font-bold uppercase tracking-wider rounded-full hover:bg-[#FF5A1F] transition-all duration-250 text-sm"
             >
-              Explore the Menu
+              Gas mi Liat Menunya
             </a>
           </div>
 
