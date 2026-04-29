@@ -66,7 +66,7 @@ export default function CTASection() {
               fontSize: 'clamp(40px, 7vw, 88px)',
             }}
           >
-            Ready for Coffee
+            Ready for Coffee?
             <br />
             Otw mi Thiz Coffee itu
           </h2>
