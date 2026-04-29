@@ -58,7 +58,7 @@ export default function About() {
                 fontSize: 'clamp(40px, 6vw, 72px)',
               }}
             >
-              Street Coffee
+              Kopi Aren
               <br />
               <span className="text-[#FF5A1F]">Thiz Coffee</span>
             </h2>
