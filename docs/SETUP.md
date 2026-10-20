@@ -76,12 +76,15 @@ its password. It never creates demo transactions.
 
 ## 4. Environment variables
 
-Copy `.env.example` to `.env.local` for local overrides if needed.
+Copy `.env.example` to `.env.local` for local Next.js runtime overrides if
+needed. CLI scripts read process environment variables; to load a file for them,
+use `node --env-file=.env.local scripts/migrate.mjs`.
 
 | Variable | Required | Default | Notes |
 | --- | --- | --- | --- |
-| `DATABASE_URL` | Production | — | PostgreSQL connection string; required when `NODE_ENV=production` or `NETLIFY=true` |
-| `DATABASE_POOL_MAX` | No | `5` | `pg` pool size |
+| `DATABASE_URL` | Production | — | PostgreSQL runtime connection string; required when `NODE_ENV=production` or `NETLIFY=true` |
+| `DATABASE_URL_UNPOOLED` | No | — | Direct connection preferred by migration/admin scripts |
+| `DATABASE_POOL_MAX` | No | `5` | `pg` pool size; use `3` on Neon/serverless |
 | `PGLITE_DATA_DIR` | No | `.data/pglite` | Local embedded database |
 | `SEED_DEMO_PASSWORD` | No | `thizcoffee123` | Development seed password |
 | `SEED_DEMO` | No | — | Must be `true` to seed when production is detected |
@@ -89,9 +92,12 @@ Copy `.env.example` to `.env.local` for local overrides if needed.
 | `ADMIN_PASSWORD` | Admin bootstrap | — | Owner password, minimum 8 characters |
 | `ADMIN_NAME` | No | `Owner Thiz Coffee` | Owner display name |
 
+For Neon production setup, see [NEON.md](NEON.md).
+
 ## 5. Database lifecycle commands
 
 ```bash
+npm run db:check         # verify connection and public table count
 npm run db:migrate       # apply db/schema.sql
 npm run db:setup         # apply schema + seed only when empty
 npm run db:seed          # seed demo data; skips non-empty DBs

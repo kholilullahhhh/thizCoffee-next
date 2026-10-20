@@ -37,7 +37,10 @@ function postgresPool(): Pool {
   return new Pool({
     connectionString,
     max: Number(process.env.DATABASE_POOL_MAX || 5),
-    ssl: isLocal ? undefined : { rejectUnauthorized: false },
+    connectionTimeoutMillis: 15_000,
+    keepAlive: true,
+    keepAliveInitialDelayMillis: 10_000,
+    ssl: isLocal ? undefined : { rejectUnauthorized: true },
   });
 }
 

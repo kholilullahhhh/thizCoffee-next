@@ -51,7 +51,10 @@ export async function openDb() {
   const pool = new pg.Pool({
     connectionString,
     max: Number(process.env.DATABASE_POOL_MAX || 5),
-    ssl: local ? undefined : { rejectUnauthorized: false },
+    connectionTimeoutMillis: 15_000,
+    keepAlive: true,
+    keepAliveInitialDelayMillis: 10_000,
+    ssl: local ? undefined : { rejectUnauthorized: true },
   });
 
   return {

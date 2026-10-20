@@ -14,20 +14,26 @@ example:
 postgresql://thizcoffee:password@db.example.com:5432/thizcoffee?sslmode=require
 ```
 
-Keep the database firewall open to Netlify build/runtime traffic. The app creates
-a `pg` pool per server instance using `DATABASE_URL`.
+For Neon, follow the dedicated [NEON.md](NEON.md) guide: use the pooled string
+for `DATABASE_URL` and the direct string for `DATABASE_URL_UNPOOLED`. Keep the
+database reachable from Netlify build/runtime traffic. The app creates a `pg`
+pool per server instance using `DATABASE_URL`.
 
 ## 2. Prepare local deploy environment
 
 ```bash
 npm install
-DATABASE_URL="postgresql://..." npm run db:migrate
-DATABASE_URL="postgresql://..." \
+DATABASE_URL_UNPOOLED="postgresql://..." npm run db:migrate
+DATABASE_URL_UNPOOLED="postgresql://..." \
 ADMIN_EMAIL="owner@example.com" \
 ADMIN_PASSWORD="a-long-random-password" \
 ADMIN_NAME="Owner Thiz Coffee" \
 npm run db:create-admin
 ```
+
+`db:migrate`, `db:setup`, `db:seed`, `db:reset`, and `db:create-admin` prefer
+`DATABASE_URL_UNPOOLED` when it is set, so schema changes bypass Neon's pooler.
+The Next.js runtime always uses `DATABASE_URL`.
 
 Do **not** run `npm run db:seed` against production. It only runs when
 `SEED_DEMO=true`, and demo data should not be mixed with real business data.
@@ -57,11 +63,13 @@ Set these Netlify environment variables:
 
 | Variable | Value |
 | --- | --- |
-| `DATABASE_URL` | Managed PostgreSQL connection string |
-| `DATABASE_POOL_MAX` | Optional; default `5` |
+| `DATABASE_URL` | Managed PostgreSQL **runtime** connection string (Neon pooled host) |
+| `DATABASE_URL_UNPOOLED` | Optional direct connection for migrations (Neon non-pooled host) |
+| `DATABASE_POOL_MAX` | Optional; default `5`; use `3` or lower on Neon/serverless |
 | `NODE_VERSION` | Already set to `20` in `netlify.toml` |
 
-Do not set `PGLITE_DATA_DIR` or `SEED_DEMO` in production.
+Do not set `PGLITE_DATA_DIR` or `SEED_DEMO` in production. Do not expose
+`ADMIN_PASSWORD` to Netlify runtime; it is only for local admin bootstrap.
 
 ## 4. Deploy
 
@@ -69,7 +77,8 @@ Using the Netlify UI:
 
 1. Connect the repository.
 2. Build command and publish directory come from `netlify.toml`.
-3. Add `DATABASE_URL` under **Site configuration → Environment variables**.
+3. Add `DATABASE_URL` and `DATABASE_URL_UNPOOLED` under **Site configuration →
+   Environment variables**, scoped to Builds and Functions as appropriate.
 4. Trigger the first deploy.
 5. Check the deploy log for `Schema database berhasil diterapkan (postgres).`
 6. Sign in at `/login` with the owner account created in step 2.

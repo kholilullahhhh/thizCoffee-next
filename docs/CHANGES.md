@@ -11,6 +11,7 @@ Verification run: **20 October 2026** (business timezone `Asia/Makassar`).
 | `npm run build` | **PASS** — compiled successfully, types valid, static pages generated `16/16` |
 | `npm run db:reset` | **PASS** — deleted local `.data/pglite` |
 | `npm run db:setup` | **PASS** — applied schema and seeded demo data with the three development accounts |
+| `npm run db:check` | **PASS** — reports the active database kind, version, and public table count |
 
 Build output included all application/dashboard routes and 23 API route handlers.
 `next build` reports `Skipping linting` because `next.config.js` sets
@@ -81,6 +82,24 @@ filters, all sort modes, and pagination (`HTTP 200`).
 - Database audit checks found no duplicate finance dedupe keys and no duplicate
   payment idempotency keys.
 
+## Neon PostgreSQL verification
+
+The production PostgreSQL path was exercised against a Neon database
+(PostgreSQL 18.6, region `ap-southeast-1`) using the direct connection for
+migration/admin tasks and the pooled connection for the application runtime.
+
+- Schema applied successfully: `Schema database berhasil diterapkan (postgres).`
+- Demo seed committed successfully.
+- Seed totals: 3 users, 4 products, 8 ingredients, 6 customers, 3 suppliers,
+  194 orders, 282 order items, 189 payments, 1,517 stock movements, 199 finance
+  entries, 27 audit records, and 20 public tables.
+- Order statuses seeded: 157 `COMPLETED`, 18 `READY`, 14 `PROCESSING`,
+  5 `CANCELLED`.
+- Authenticated application smoke test against Neon returned `200` for
+  `/dashboard`, orders with combined filter/sort, finance, reports, inventory,
+  and settings. Login returned `200`, and finance CSV export returned a UTF-8 BOM.
+- The temporary test session and test login audit were removed afterward.
+
 ## Schema summary
 
 `db/schema.sql` defines: users, sessions, business settings, product categories,
@@ -124,10 +143,11 @@ values, role values, and financial category kinds including `CAPITAL`.
   `lib/types.ts`
 - `lib/services/analytics.ts`, `inventory.ts`, `order-data.ts`, `orders.ts`,
   `products.ts`
-- `scripts/create-admin.mjs`, `migrate.mjs`, `reset.mjs`, `seed.mjs`,
-  `setup.mjs`, `scripts/lib/db.mjs`, `password.mjs`, `seed.mjs`
-- `.env.example`, `AGENTS.md`
-- `docs/SETUP.md`, `docs/DEPLOYMENT.md`, `docs/ACCOUNTING.md`, `docs/CHANGES.md`
+- `scripts/create-admin.mjs`, `migrate.mjs`, `check-db.mjs`, `reset.mjs`,
+  `seed.mjs`, `setup.mjs`, `scripts/lib/db.mjs`, `password.mjs`, `seed.mjs`
+- `.env.example`, `.env.neon.example`, `AGENTS.md`
+- `docs/SETUP.md`, `docs/NEON.md`, `docs/DEPLOYMENT.md`, `docs/ACCOUNTING.md`,
+  `docs/CHANGES.md`
 
 ### Preserved
 
@@ -138,10 +158,9 @@ values, role values, and financial category kinds including `CAPITAL`.
 
 ## Limitations and follow-ups
 
-1. **Production PostgreSQL path not exercised locally.** The `pg` adapter and
-   same SQL schema are implemented, but this workspace had no PostgreSQL/Docker;
-   all runtime tests used embedded PGlite. Run the deployment checklist against a
-   staging PostgreSQL database before going live.
+1. **Neon is the only production PostgreSQL provider tested.** The `pg` adapter
+   and schema were verified against Neon 18.6. Run the same deployment checklist
+   against other providers before switching.
 2. **No automated test suite.** Verification was manual API/page smoke testing.
    Add integration tests for order/payment idempotency and role guards before
    high-volume production use.

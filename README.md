@@ -89,8 +89,9 @@ creates/updates an `OWNER` account. It does not seed demo transactions.
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `DATABASE_URL` | Production | PostgreSQL connection string |
-| `DATABASE_POOL_MAX` | No | Connection pool size (default `5`) |
+| `DATABASE_URL` | Production | PostgreSQL connection string; on Neon use the pooled host |
+| `DATABASE_URL_UNPOOLED` | No | Direct connection used by migration/admin scripts |
+| `DATABASE_POOL_MAX` | No | Connection pool size (default `5`; use `3` on Neon/serverless) |
 | `PGLITE_DATA_DIR` | No | Local PGlite directory (default `.data/pglite`) |
 | `SEED_DEMO_PASSWORD` | No | Development seed password (default `thizcoffee123`) |
 | `SEED_DEMO` | No | Set to `true` to allow demo seeding against production |
@@ -98,7 +99,8 @@ creates/updates an `OWNER` account. It does not seed demo transactions.
 | `ADMIN_PASSWORD` | Admin bootstrap | Production owner password |
 | `ADMIN_NAME` | No | Production owner display name |
 
-Never commit `.env` files. `.env.example` documents the variables.
+Never commit `.env` files. `.env.example` documents general variables and
+`.env.neon.example` is a Neon deployment template.
 
 ## Scripts
 
@@ -110,6 +112,7 @@ Never commit `.env` files. `.env.example` documents the variables.
 | `npm run build` | Production build |
 | `npm run start` | Start a production build |
 | `npm run db:migrate` | Apply `db/schema.sql` |
+| `npm run db:check` | Check the active database connection and table count |
 | `npm run db:setup` | Apply schema and seed demo data if the database is empty |
 | `npm run db:seed` | Seed demo data (skips non-empty databases; production requires `SEED_DEMO=true`) |
 | `npm run db:reset` | Delete local PGlite data, or require explicit confirmation for PostgreSQL |
@@ -118,6 +121,7 @@ Never commit `.env` files. `.env.example` documents the variables.
 ## Documentation
 
 - [Setup guide](docs/SETUP.md)
+- [Neon PostgreSQL deployment](docs/NEON.md)
 - [Deployment guide](docs/DEPLOYMENT.md)
 - [Accounting and stock rules](docs/ACCOUNTING.md)
 - [Verification results, file summary, limitations](docs/CHANGES.md)
@@ -127,8 +131,7 @@ Never commit `.env` files. `.env.example` documents the variables.
 - `npm run build` requires outbound access to Google Fonts for `next/font/google`.
   The final build passed in this workspace; an offline build can fail only at that
   step with `Failed to fetch Inter`.
-- Production PostgreSQL behavior is implemented with `pg`, but local verification
-  in this workspace was performed against PGlite because PostgreSQL/Docker was not
-  available.
+- Production PostgreSQL has been verified against Neon 18.6. Other managed
+  PostgreSQL providers still need their own deployment check.
 - The legacy `components/ui/*` shadcn files and `hooks/use-toast.ts` remain unused
   template scaffolding; the live landing page and dashboard use raw Tailwind.

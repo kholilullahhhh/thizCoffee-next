@@ -18,9 +18,10 @@ seed. See `docs/ACCOUNTING.md` before changing financial or inventory logic.
 - `npm run build` — production build. Needs outbound access to Google Fonts for
   `next/font/google`; offline builds can fail only with `Failed to fetch Inter`.
 - `next.config.js` sets `eslint.ignoreDuringBuilds: true`, so run lint explicitly.
-- Database: `db:migrate`, `db:setup`, `db:seed`, `db:reset`, `db:create-admin`.
-  Local reset deletes `.data/pglite`; PostgreSQL reset requires `--force` and
-  `CONFIRM_RESET=YES`.
+- Database: `db:migrate`, `db:check`, `db:setup`, `db:seed`, `db:reset`,
+  `db:create-admin`. Local reset deletes `.data/pglite`; PostgreSQL reset
+  requires `--force` and `CONFIRM_RESET=YES`. CLI scripts prefer
+  `DATABASE_URL_UNPOOLED` and fall back to `DATABASE_URL`.
 
 Baseline: typecheck is clean. Lint has one pre-existing warning
 (`@next/next/no-page-custom-font`) for the Bebas Neue `<link>` in
@@ -99,8 +100,12 @@ Next 13.5.1 / React 18.2 are pinned. Avoid Next 14/15-only APIs.
   migrations before building. This is not a static export.
 - Production requires `DATABASE_URL`; PGlite fallback is disabled when
   `NODE_ENV=production` or `NETLIFY=true`.
+- For Neon, runtime `DATABASE_URL` uses the pooled host and
+  `DATABASE_URL_UNPOOLED` is the direct host for build migrations/admin. See
+  `docs/NEON.md`.
 - Do not seed demo data in production (`SEED_DEMO=true` would be required).
 - Security headers are set in `next.config.js`. Keep CSRF origin checks, session
   revocation on password reset/deactivation, and server-side role checks intact.
-- Setup/deploy/accounting details live in `docs/SETUP.md`, `docs/DEPLOYMENT.md`,
-  `docs/ACCOUNTING.md`; verification status is in `docs/CHANGES.md`.
+- Setup/deploy/accounting details live in `docs/SETUP.md`, `docs/NEON.md`,
+  `docs/DEPLOYMENT.md`, `docs/ACCOUNTING.md`; verification status is in
+  `docs/CHANGES.md`.
