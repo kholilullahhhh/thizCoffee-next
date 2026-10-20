@@ -28,6 +28,9 @@ yarn-error.log*
 .env
 .env*.local
 
+# local embedded PostgreSQL database (PGlite)
+/.data/
+
 # vercel
 .vercel
 

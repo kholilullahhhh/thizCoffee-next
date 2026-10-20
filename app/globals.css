@@ -86,3 +86,102 @@ html {
 .delay-600 { animation-delay: 600ms; }
 
 .opacity-0-init { opacity: 0; }
+
+/* ---------------------------------------------------------------------------
+   Dashboard design system
+   The landing page keeps its own raw Tailwind styling. These helpers are
+   scoped by class name and only used by the dashboard.
+--------------------------------------------------------------------------- */
+
+.font-display {
+  font-family: 'Bebas Neue', 'Arial Narrow', sans-serif;
+  letter-spacing: 0.04em;
+}
+
+.dashboard-label {
+  @apply mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400;
+}
+
+.dashboard-input {
+  @apply h-11 w-full rounded-xl border border-black/10 bg-white px-3.5 text-sm text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-[#FF5A1F] focus:ring-2 focus:ring-[#FF5A1F]/20 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400 dark:border-white/10 dark:bg-[#181818] dark:text-gray-100 dark:placeholder:text-gray-600 dark:focus:border-[#FF5A1F];
+}
+
+.dashboard-textarea {
+  @apply min-h-[96px] w-full rounded-xl border border-black/10 bg-white px-3.5 py-3 text-sm text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-[#FF5A1F] focus:ring-2 focus:ring-[#FF5A1F]/20 dark:border-white/10 dark:bg-[#181818] dark:text-gray-100 dark:placeholder:text-gray-600;
+}
+
+.dashboard-card {
+  @apply rounded-2xl border border-black/[0.07] bg-white shadow-[0_1px_2px_rgba(10,10,10,0.04)] dark:border-white/[0.07] dark:bg-[#141414];
+}
+
+.dashboard-table-shell {
+  @apply dashboard-card overflow-hidden;
+}
+
+.dashboard-table {
+  @apply w-full min-w-[680px] border-collapse text-left text-sm;
+}
+
+.dashboard-table thead {
+  @apply border-b border-black/[0.06] bg-[#FAFAF8] dark:border-white/[0.06] dark:bg-white/[0.025];
+}
+
+.dashboard-table th {
+  @apply whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400;
+}
+
+.dashboard-table td {
+  @apply border-b border-black/[0.04] px-4 py-3.5 align-middle text-gray-600 last:border-0 dark:border-white/[0.04] dark:text-gray-300;
+}
+
+.dashboard-table tbody tr {
+  @apply transition-colors hover:bg-[#FFF8F4] dark:hover:bg-white/[0.025];
+}
+
+.dashboard-table tbody tr:last-child td {
+  @apply border-b-0;
+}
+
+.menu-scroll {
+  scrollbar-width: thin;
+}
+
+.menu-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.menu-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.menu-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 90, 31, 0.35);
+}
+
+@media print {
+  body {
+    background: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-hidden {
+    display: none !important;
+  }
+
+  .print-area {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print-card {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+}
