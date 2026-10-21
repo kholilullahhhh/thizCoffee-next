@@ -98,11 +98,16 @@ Next 13.5.1 / React 18.2 are pinned. Avoid Next 14/15-only APIs.
 
 - Netlify uses `@netlify/plugin-nextjs`, publishes `.next`, pins Node 20, and runs
   migrations before building. This is not a static export.
-- Production requires `DATABASE_URL`; PGlite fallback is disabled when
+- Production requires `DATABASE_URL` or a Netlify-injected Neon database variable
+  (`NETLIFY_DB_URL` / `NETLIFY_DATABASE_URL`); PGlite fallback is disabled when
   `NODE_ENV=production` or `NETLIFY=true`.
 - For Neon, runtime `DATABASE_URL` uses the pooled host and
-  `DATABASE_URL_UNPOOLED` is the direct host for build migrations/admin. See
+  `DATABASE_URL_UNPOOLED` is the direct host for build migrations/admin. Netlify
+  Neon/Netlify DB integrations may inject `NETLIFY_DB_URL` or
+  `NETLIFY_DATABASE_URL`; `lib/db.ts` and CLI scripts detect those aliases. See
   `docs/NEON.md`.
+- `/api/health` is the production readiness check for runtime database access and
+  schema presence. Keep it free of credentials and business data.
 - Do not seed demo data in production (`SEED_DEMO=true` would be required).
 - Security headers are set in `next.config.js`. Keep CSRF origin checks, session
   revocation on password reset/deactivation, and server-side role checks intact.

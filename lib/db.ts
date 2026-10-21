@@ -30,8 +30,37 @@ const globalForDb = globalThis as typeof globalThis & {
   __thizCoffeeDb?: Promise<Db>;
 };
 
-function postgresPool(): Pool {
-  const connectionString = process.env.DATABASE_URL as string;
+const DATABASE_URL_KEYS = [
+  'DATABASE_URL',
+  'NETLIFY_DB_URL',
+  'NETLIFY_DATABASE_URL',
+] as const;
+
+function cleanEnvValue(value: string | undefined) {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed;
+}
+
+export function getDatabaseUrlSource(): string | undefined {
+  for (const key of DATABASE_URL_KEYS) {
+    if (cleanEnvValue(process.env[key])) return key;
+  }
+  return undefined;
+}
+
+export function getDatabaseUrl(): string | undefined {
+  const source = getDatabaseUrlSource();
+  return source ? cleanEnvValue(process.env[source]) : undefined;
+}
+
+function postgresPool(connectionString: string): Pool {
   const isLocal =
     connectionString.includes('localhost') || connectionString.includes('127.0.0.1');
   return new Pool({
@@ -40,6 +69,7 @@ function postgresPool(): Pool {
     connectionTimeoutMillis: 15_000,
     keepAlive: true,
     keepAliveInitialDelayMillis: 10_000,
+    application_name: 'thiz-coffee-web',
     ssl: isLocal ? undefined : { rejectUnauthorized: true },
   });
 }
@@ -50,8 +80,8 @@ async function applySchema(exec: (sql: string) => Promise<unknown>) {
   await exec(sql);
 }
 
-async function createPostgresDb(): Promise<Db> {
-  const pool = postgresPool();
+async function createPostgresDb(connectionString: string): Promise<Db> {
+  const pool = postgresPool(connectionString);
   const executor: DbExecutor = {
     async query<T extends Record<string, unknown>>(sql: string, params: unknown[] = []) {
       const result = await pool.query(sql, params as never[]);
@@ -138,17 +168,25 @@ async function createPgliteDb(): Promise<Db> {
 export function getDb(): Promise<Db> {
   if (!globalForDb.__thizCoffeeDb) {
     const production = process.env.NODE_ENV === 'production' || process.env.NETLIFY === 'true';
-    if (!process.env.DATABASE_URL && production) {
-      globalForDb.__thizCoffeeDb = Promise.reject(
-        new Error(
-          'DATABASE_URL is required in production. Configure a managed PostgreSQL database (Neon, Supabase, Railway, etc.) before starting the app.'
-        )
-      );
-    } else {
-      globalForDb.__thizCoffeeDb = process.env.DATABASE_URL
-        ? createPostgresDb()
-        : createPgliteDb();
-    }
+    const connectionString = getDatabaseUrl();
+    const promise =
+      !connectionString && production
+        ? Promise.reject(
+            new Error(
+              'DATABASE_URL is required in production. Set DATABASE_URL (or the Netlify Neon variable NETLIFY_DB_URL / NETLIFY_DATABASE_URL).'
+            )
+          )
+        : connectionString
+          ? createPostgresDb(connectionString)
+          : createPgliteDb();
+    globalForDb.__thizCoffeeDb = promise;
+    // Never cache an initialization failure: a later request can retry after
+    // the environment is fixed or a transient startup error clears.
+    promise.catch(() => {
+      if (globalForDb.__thizCoffeeDb === promise) {
+        delete globalForDb.__thizCoffeeDb;
+      }
+    });
   }
   return globalForDb.__thizCoffeeDb;
 }

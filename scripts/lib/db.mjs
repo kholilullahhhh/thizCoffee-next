@@ -5,16 +5,48 @@ export function isProduction() {
   return process.env.NODE_ENV === 'production' || process.env.NETLIFY === 'true';
 }
 
+const CONNECTION_KEYS = [
+  'DATABASE_URL_UNPOOLED',
+  'NETLIFY_DB_URL_UNPOOLED',
+  'NETLIFY_DATABASE_URL_UNPOOLED',
+  'DATABASE_URL',
+  'NETLIFY_DB_URL',
+  'NETLIFY_DATABASE_URL',
+];
+
+function cleanEnvValue(value) {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed;
+}
+
+export function getDatabaseConnectionString() {
+  const source = getDatabaseConnectionSource();
+  return source ? cleanEnvValue(process.env[source]) : undefined;
+}
+
+export function getDatabaseConnectionSource() {
+  for (const key of CONNECTION_KEYS) {
+    if (cleanEnvValue(process.env[key])) return key;
+  }
+  return undefined;
+}
+
 export async function openDb() {
-  // CLI tasks (migrate/setup/seed/create-admin) prefer Neon's direct
-  // connection. The app runtime uses DATABASE_URL, which can be pooled.
-  const connectionString =
-    process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
+  // CLI tasks prefer Neon's direct connection. Runtime uses DATABASE_URL or
+  // the connection variable injected by the Netlify Neon/Netlify DB extension.
+  const connectionString = getDatabaseConnectionString();
 
   if (!connectionString) {
     if (isProduction()) {
       throw new Error(
-        'DATABASE_URL is required in production. Use a managed PostgreSQL database (Neon, Supabase, Railway, etc.).'
+        'DATABASE_URL is required in production. Set DATABASE_URL (or NETLIFY_DB_URL / NETLIFY_DATABASE_URL from the Netlify Neon integration).'
       );
     }
     const { PGlite } = await import('@electric-sql/pglite');
@@ -54,6 +86,7 @@ export async function openDb() {
     connectionTimeoutMillis: 15_000,
     keepAlive: true,
     keepAliveInitialDelayMillis: 10_000,
+    application_name: 'thiz-coffee-cli',
     ssl: local ? undefined : { rejectUnauthorized: true },
   });
 

@@ -1,5 +1,6 @@
-import { openDb } from './lib/db.mjs';
+import { openDb, getDatabaseConnectionSource } from './lib/db.mjs';
 
+const source = getDatabaseConnectionSource();
 const db = await openDb();
 try {
   const info = await db.query(
@@ -13,6 +14,7 @@ try {
   );
   const row = info[0] || {};
   console.log(`Koneksi database: ${db.kind}`);
+  if (source) console.log(`Sumber env: ${source}`);
   console.log(`Database: ${row.database || '-'}`);
   console.log(`User: ${row.username || '-'}`);
   console.log(`PostgreSQL: ${row.version || '-'}`);

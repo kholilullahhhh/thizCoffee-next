@@ -1,6 +1,6 @@
 # Verification, File Summary, and Limitations
 
-Verification run: **20 October 2026** (business timezone `Asia/Makassar`).
+Verification run: **20–21 October 2026** (business timezone `Asia/Makassar`).
 
 ## Commands and exact results
 
@@ -13,7 +13,7 @@ Verification run: **20 October 2026** (business timezone `Asia/Makassar`).
 | `npm run db:setup` | **PASS** — applied schema and seeded demo data with the three development accounts |
 | `npm run db:check` | **PASS** — reports the active database kind, version, and public table count |
 
-Build output included all application/dashboard routes and 23 API route handlers.
+Build output included all application/dashboard routes and 24 API route handlers.
 `next build` reports `Skipping linting` because `next.config.js` sets
 `eslint.ignoreDuringBuilds: true`; lint was run separately as shown above.
 
@@ -100,6 +100,36 @@ migration/admin tasks and the pooled connection for the application runtime.
   and settings. Login returned `200`, and finance CSV export returned a UTF-8 BOM.
 - The temporary test session and test login audit were removed afterward.
 
+## Production login hardening
+
+The production login path was reproduced with a real `next start` build against
+Neon, including the environment-variable shapes used by Netlify integrations.
+
+- The runtime resolver accepts `DATABASE_URL`, `NETLIFY_DB_URL` (new Netlify DB),
+  and legacy `NETLIFY_DATABASE_URL`, including values wrapped in quotes.
+- CLI scripts additionally accept the matching `*_UNPOOLED` variables.
+- Production test with **only** `NETLIFY_DB_URL` set:
+  - `GET /api/health` → `200`, `source: "NETLIFY_DB_URL"`, `schemaReady: true`,
+    `usersReady: true`
+  - `POST /api/auth/login` → `200 {"ok":true}`
+  - Authenticated `GET /dashboard` → `200`
+- Production test with no database variable:
+  - `GET /api/health` → `503 {"database":"unconfigured",...}`
+  - `POST /api/auth/login` → `503` with
+    `"Layanan database tidak tersedia. Periksa konfigurasi database pada environment hosting."`
+    instead of an opaque `500`.
+- Added `/api/health` for runtime readiness, including database connectivity,
+  schema state, active-user state, and the name (never the value) of the detected
+  environment variable.
+- Database errors in API handlers now return a clear `503` with a safe error code
+  instead of the generic `"Terjadi kesalahan pada server."`. The mapping covers
+  authentication, missing database/schema/column, connection exhaustion
+  (`53300`), server-not-accepting-connections (`57P03`), and TLS failures.
+- A failed database initialization is no longer cached, so a later request can
+  retry after the environment or a transient startup error is fixed.
+- Neon runtime connections use verified TLS (`sslmode=verify-full`,
+  `rejectUnauthorized: true`) and TCP keepalive.
+
 ## Schema summary
 
 `db/schema.sql` defines: users, sessions, business settings, product categories,
@@ -130,9 +160,9 @@ values, role values, and financial category kinds including `CAPITAL`.
 - `app/(auth)/login/page.tsx` — dashboard login
 - `app/(dashboard)/dashboard/**` — all dashboard pages, layout, loading, error,
   order detail and receipt
-- `app/api/**` — auth, orders, payments, cancellations, products, ingredients,
-  stock adjustments, finance/void, customers, suppliers, settings, users,
-  configurable lookups, CSV export
+- `app/api/**` — auth, health, orders, payments, cancellations, products,
+  ingredients, stock adjustments, finance/void, customers, suppliers, settings,
+  users, configurable lookups, CSV export
 - `components/auth/login-form.tsx`
 - `components/dashboard/**` — shell, navigation, charts, stat cards, tables,
   modals, pagination, period filters, print button, and module managers
@@ -145,7 +175,7 @@ values, role values, and financial category kinds including `CAPITAL`.
   `products.ts`
 - `scripts/create-admin.mjs`, `migrate.mjs`, `check-db.mjs`, `reset.mjs`,
   `seed.mjs`, `setup.mjs`, `scripts/lib/db.mjs`, `password.mjs`, `seed.mjs`
-- `.env.example`, `.env.neon.example`, `AGENTS.md`
+- `.env.example`, `AGENTS.md`
 - `docs/SETUP.md`, `docs/NEON.md`, `docs/DEPLOYMENT.md`, `docs/ACCOUNTING.md`,
   `docs/CHANGES.md`
 

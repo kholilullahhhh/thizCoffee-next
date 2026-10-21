@@ -84,6 +84,7 @@ use `node --env-file=.env.local scripts/migrate.mjs`.
 | --- | --- | --- | --- |
 | `DATABASE_URL` | Production | — | PostgreSQL runtime connection string; required when `NODE_ENV=production` or `NETLIFY=true` |
 | `DATABASE_URL_UNPOOLED` | No | — | Direct connection preferred by migration/admin scripts |
+| `NETLIFY_DB_URL` / `NETLIFY_DATABASE_URL` | No | — | Auto-detected Netlify Neon/Netlify DB runtime variables |
 | `DATABASE_POOL_MAX` | No | `5` | `pg` pool size; use `3` on Neon/serverless |
 | `PGLITE_DATA_DIR` | No | `.data/pglite` | Local embedded database |
 | `SEED_DEMO_PASSWORD` | No | `thizcoffee123` | Development seed password |

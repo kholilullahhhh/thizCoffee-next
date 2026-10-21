@@ -25,14 +25,16 @@ DATABASE_POOL_MAX=3
 
 ## 2. Siapkan env lokal untuk migration
 
-Copy template yang tersedia:
+Buat file `.env.neon.local` di root project dan isi dengan connection string
+Neon. Bentuknya:
 
-```powershell
-Copy-Item .env.neon.example .env.neon.local
+```text
+DATABASE_URL=postgresql://USER:PASSWORD@ep-xxxxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=verify-full
+DATABASE_URL_UNPOOLED=postgresql://USER:PASSWORD@ep-xxxxx.ap-southeast-1.aws.neon.tech/neondb?sslmode=verify-full
+DATABASE_POOL_MAX=3
 ```
 
-Isi `.env.neon.local` dengan connection string Neon. File itu sudah di-ignore
-`.gitignore` (`*.local`) dan tidak boleh di-commit.
+File itu sudah di-ignore `.gitignore` (`*.local`) dan tidak boleh di-commit.
 
 Jalankan pengecekan koneksi:
 
@@ -75,7 +77,14 @@ development dan membutuhkan `SEED_DEMO=true` bila production terdeteksi.
 
 ## 4. Set environment di Netlify
 
-Buka **Site configuration → Environment variables** dan tambahkan:
+Jika Anda memakai integrasi **Netlify Neon / Netlify DB**, Netlify dapat
+menyuntikkan `NETLIFY_DB_URL` (integrasi baru) atau `NETLIFY_DATABASE_URL`
+(integrasi legacy) secara otomatis. Aplikasi mendeteksi keduanya tanpa perlu
+mengganti nama variable. Pastikan scope-nya mencakup **Functions**, karena
+panggilan login dan query dashboard berjalan di runtime function.
+
+Jika memakai koneksi manual, buka **Site configuration → Environment variables**
+dan tambahkan:
 
 | Variable | Scope | Value |
 | --- | --- | --- |
@@ -106,15 +115,36 @@ memakai koneksi pooled dengan batas pool kecil agar sesuai batas koneksi Neon.
 4. Cek halaman `/dashboard`, buat satu transaksi uji, lalu batalkan.
 5. Pastikan data tetap ada setelah refresh/instance restart.
 6. Periksa audit log dan laporan.
+7. Buka `/api/health`. Respons yang benar:
+
+```json
+{"ok":true,"database":"connected","source":"DATABASE_URL","schemaReady":true,"usersReady":true,"message":"Database connected."}
+```
+
+Jika hasilnya `503`, response menunjukkan apakah database belum dikonfigurasi,
+tidak bisa dihubungi, atau schema belum dimigrasikan.
 
 Checklist production lengkap ada di [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Troubleshooting
 
+### Login production menampilkan "Terjadi kesalahan pada server"
+
+1. Buka `/api/health`.
+2. Jika `database: "unconfigured"`, tambahkan `DATABASE_URL`, atau pastikan
+   `NETLIFY_DB_URL` / `NETLIFY_DATABASE_URL` dari integrasi Netlify tersedia untuk
+   **Functions**, lalu redeploy.
+3. Jika `database: "unreachable"`, periksa connection string dan status compute
+   Neon.
+4. Jika `schemaReady: false`, jalankan migration.
+5. Cek Netlify Function logs; error database sekarang akan tampil dengan kode
+   seperti `28P01` (password salah) atau `42P01` (schema belum ada).
+
 ### `DATABASE_URL is required in production`
 
 Variable belum terbaca oleh proses. Pastikan scope Netlify mencakup **Functions**
-dan **Builds**, lalu redeploy.
+dan **Builds**, lalu redeploy. Aplikasi juga menerima `NETLIFY_DB_URL` dan
+`NETLIFY_DATABASE_URL`; cek `/api/health` untuk memastikan nilainya terdeteksi.
 
 ### `relation "users" does not exist`
 

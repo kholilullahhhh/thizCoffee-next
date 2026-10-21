@@ -65,6 +65,7 @@ Set these Netlify environment variables:
 | --- | --- |
 | `DATABASE_URL` | Managed PostgreSQL **runtime** connection string (Neon pooled host) |
 | `DATABASE_URL_UNPOOLED` | Optional direct connection for migrations (Neon non-pooled host) |
+| `NETLIFY_DB_URL` / `NETLIFY_DATABASE_URL` | Auto-detected alternative injected by the Netlify Neon/Netlify DB extension |
 | `DATABASE_POOL_MAX` | Optional; default `5`; use `3` or lower on Neon/serverless |
 | `NODE_VERSION` | Already set to `20` in `netlify.toml` |
 
@@ -99,6 +100,7 @@ the build command.
 
 - [ ] `/` still renders the public landing page and WhatsApp links.
 - [ ] `/login` works over HTTPS.
+- [ ] `/api/health` returns `200` with `schemaReady: true`.
 - [ ] Session cookie is `HttpOnly`, `SameSite=Lax`, and `Secure` in production.
 - [ ] Owner can access all dashboard modules.
 - [ ] STAFF cannot access finance/reports/settings.

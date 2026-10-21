@@ -85,12 +85,18 @@ DATABASE_URL="postgresql://user:password@host:5432/database?sslmode=require" npm
 `npm run db:create-admin` prompts via environment variables or CLI arguments and
 creates/updates an `OWNER` account. It does not seed demo transactions.
 
+After deployment, check `GET /api/health`. It returns `200` with
+`{"ok":true,"database":"connected","schemaReady":true,"usersReady":true}` when
+runtime database access, the schema, and an active user are ready; otherwise it
+returns `503` with a diagnostic.
+
 ## Environment variables
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
 | `DATABASE_URL` | Production | PostgreSQL connection string; on Neon use the pooled host |
 | `DATABASE_URL_UNPOOLED` | No | Direct connection used by migration/admin scripts |
+| `NETLIFY_DB_URL` / `NETLIFY_DATABASE_URL` | No | Automatically detected when Netlify injects the Neon connection |
 | `DATABASE_POOL_MAX` | No | Connection pool size (default `5`; use `3` on Neon/serverless) |
 | `PGLITE_DATA_DIR` | No | Local PGlite directory (default `.data/pglite`) |
 | `SEED_DEMO_PASSWORD` | No | Development seed password (default `thizcoffee123`) |
@@ -99,8 +105,9 @@ creates/updates an `OWNER` account. It does not seed demo transactions.
 | `ADMIN_PASSWORD` | Admin bootstrap | Production owner password |
 | `ADMIN_NAME` | No | Production owner display name |
 
-Never commit `.env` files. `.env.example` documents general variables and
-`.env.neon.example` is a Neon deployment template.
+Never commit `.env` files or real connection strings. `.env.example` documents
+the general variables; for Neon, create a local `.env.neon.local` file using the
+template in [docs/NEON.md](docs/NEON.md).
 
 ## Scripts
 

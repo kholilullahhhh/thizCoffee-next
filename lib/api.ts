@@ -71,6 +71,46 @@ export function handleApiError(error: unknown): NextResponse {
     );
   }
   const message = error instanceof Error ? error.message : 'Terjadi kesalahan tidak terduga.';
+  const code =
+    error && typeof error === 'object' && 'code' in error
+      ? String((error as { code?: unknown }).code || '')
+      : '';
+  const isDatabaseError =
+    /DATABASE_URL is required|password authentication failed|database .* does not exist|relation .* does not exist|column .* does not exist/i.test(
+      message
+    ) ||
+    [
+      'ECONNREFUSED',
+      'ENOTFOUND',
+      'ETIMEDOUT',
+      'ECONNRESET',
+      'EHOSTUNREACH',
+      'ENETUNREACH',
+      '28P01',
+      '3D000',
+      '42P01',
+      '42703',
+      '53300',
+      '57P03',
+      '08001',
+      '08003',
+      '08006',
+      'DEPTH_ZERO_SELF_SIGNED_CERT',
+      'SELF_SIGNED_CERT_IN_CHAIN',
+      'UNABLE_TO_VERIFY_LEAF_SIGNATURE',
+      'ERR_TLS_CERT_ALTNAME_INVALID',
+    ].includes(code);
+  if (isDatabaseError) {
+    console.error('[api] database error', error);
+    return NextResponse.json(
+      {
+        error:
+          'Layanan database tidak tersedia. Periksa konfigurasi database pada environment hosting.',
+        code: code || undefined,
+      },
+      { status: 503 }
+    );
+  }
   const isDbConflict = /duplicate key|unique constraint/i.test(message);
   if (isDbConflict) {
     return NextResponse.json(
