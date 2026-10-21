@@ -164,6 +164,12 @@ connection untuk runtime, bukan direct connection.
 Salin ulang connection string dari Neon. Jangan mencampur host pooled dengan
 password project yang berbeda atau menghilangkan `?sslmode=verify-full`.
 
+Perhatikan host secara persis. Endpoint Neon baru dapat memiliki segmen
+komputasi seperti `ep-xxxx.c-2.ap-southeast-1.aws.neon.tech` atau `.c-3`.
+Menghilangkan segmen `.c-2`/`.c-3` membuat koneksi menuju endpoint yang salah
+dan PostgreSQL menolak dengan kode `28P01` meskipun password benar. Salin
+langsung dari tombol **Connect** di Neon Console, jangan mengetik ulang host.
+
 ### Koneksi Neon lambat pada request pertama
 
 Neon dapat menidurkan compute saat idle. Request pertama bisa lebih lambat;
