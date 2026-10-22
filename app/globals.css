@@ -160,6 +160,37 @@ html {
   background: rgba(255, 90, 31, 0.35);
 }
 
+/* Sidebar scrollbar: brand orange, rounded thumb, subtle track on hover. */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #ff5a1f rgba(255, 255, 255, 0.06);
+  overscroll-behavior: contain;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  margin: 10px 0;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.sidebar-scroll:hover::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff8a5c 0%, #ff5a1f 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffa07a 0%, #ff6a33 100%);
+}
+
 @media print {
   body {
     background: #fff !important;

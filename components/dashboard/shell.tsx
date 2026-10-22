@@ -203,7 +203,7 @@ export function DashboardShell({
           </button>
         </div>
 
-        <nav className="menu-scroll flex-1 overflow-y-auto px-3 py-5">
+        <nav className="sidebar-scroll flex-1 overflow-y-auto px-3 py-5">
           {sections.map((section) =>
             section.items.length ? (
               <div key={section.label} className="mb-5">
