@@ -1,3 +1,4 @@
+import ScrollProgressBar from '@/components/ScrollProgressBar';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
@@ -12,6 +13,7 @@ import WhatsAppButton from '@/components/WhatsAppButton';
 export default function Home() {
   return (
     <main className="min-h-screen">
+      <ScrollProgressBar />
       <Navbar />
       <Hero />
       <About />
