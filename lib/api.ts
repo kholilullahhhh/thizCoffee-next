@@ -113,6 +113,7 @@ export function handleApiError(error: unknown): NextResponse {
   }
   const isDbConflict = /duplicate key|unique constraint/i.test(message);
   if (isDbConflict) {
+    console.error('[api] database conflict', error);
     return NextResponse.json(
       { error: 'Data bertentangan dengan data yang sudah ada (duplikat).' },
       { status: 409 }

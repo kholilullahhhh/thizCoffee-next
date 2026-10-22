@@ -128,7 +128,7 @@ async function deductRecipeIngredients(
         -usage,
         `Pemakaian resep untuk ${orderId}`,
         orderId,
-        `order-${orderId}-ingredient-${recipe.ingredient_id}`,
+        `order-${orderId}-product-${product.id}-ingredient-${recipe.ingredient_id}`,
         actorId,
       ]
     );
